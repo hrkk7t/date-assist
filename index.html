@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日付入力補助ツール</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+ <link rel="icon" href="icon.png" type="image/png">   
+<link rel="manifest" href="manifest.json"> 
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>日付入力補助ツール</h1>
+            <button id="clear-button" class="icon-button" onclick="clearAll()" title="すべてクリア">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('single')">単日・連続</button>
+            <button class="tab-button" onclick="showTab('weekly')">曜日指定</button>
+        </div>
+
+        <div id="single" class="tab-content active">
+            <div class="input-group">
+                <label for="start-date">開始日:</label>
+                <input type="text" id="start-date" placeholder="例: 2025/12/1">
+                <label for="end-date">終了日(任意):</label>
+                <input type="text" id="end-date" placeholder="例: 2026/1/31">
+                <button onclick="generateDates()" class="generate-button">生成</button>
+            </div>
+        </div>
+
+        <div id="weekly" class="tab-content">
+            <div class="input-group">
+                <label for="weekly-weekday">曜日を選択:</label>
+                <select id="weekly-weekday">
+                    <option value="0">日曜日</option>
+                    <option value="1">月曜日</option>
+                    <option value="2">火曜日</option>
+                    <option value="3">水曜日</option>
+                    <option value="4">木曜日</option>
+                    <option value="5">金曜日</option>
+                    <option value="6">土曜日</option>
+                </select>
+                <label for="weekly-start-date">開始日:</label>
+                <input type="text" id="weekly-start-date" placeholder="例: 2025/4/1">
+                <label for="weekly-end-date">終了日:</label>
+                <input type="text" id="weekly-end-date" placeholder="例: 2025/6/30">
+                <button onclick="generateWeeklyDates()" class="generate-button">生成</button>
+            </div>
+        </div>
+
+        <div class="results">
+            <h2>生成結果</h2>
+            <div class="output-container">
+                <div class="output-column">
+                    <h3>日本語表記</h3>
+                    <div id="display-output" class="output-box"></div>
+                </div>
+                <div class="output-column">
+                    <h3>YYYYMMDD形式</h3>
+                    <div id="yyyymmdd-output" class="output-box"></div>
+                </div>
+            </div>
+            <h2>連結テキスト (コピー用)</h2>
+            <div class="copy-area">
+                <textarea id="combined-text" readonly></textarea>
+                <button onclick="copyToClipboard()" class="icon-button" title="コピー">
+                    <i class="fa-solid fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "日付入力補助ツール",
+  "short_name": "日付補助",
+  "description": "日付の入力や生成を補助するツールです。",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#888BF4",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
