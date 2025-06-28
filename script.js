@@ -31,7 +31,7 @@ function generateDates() {
         }
 
         const results = [];
-        let currentDate = new Date(startDate); 
+        let currentDate = new Date(startDate);
         while (currentDate <= endDate) {
             results.push(formatAll(currentDate));
             currentDate.setDate(currentDate.getDate() + 1);
@@ -50,7 +50,7 @@ function generateWeeklyDates() {
     const endDateInput = document.getElementById('weekly-end-date');
 
     const selectedWeekday = parseInt(weekdaySelect.value, 10);
-    
+
     // 2. 開始日と終了日をパースし、エラーチェックを行う
     const startDate = parseFullDate(startDateInput.value);
     if (!startDate) {
@@ -80,7 +80,7 @@ function generateWeeklyDates() {
         // 日付を1日進める
         currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
     // 4. 結果を表示する
     displayResults(results);
 }
@@ -118,10 +118,10 @@ function displayResults(results) {
     const displayOutput = document.getElementById('display-output');
     const yyyymmddOutput = document.getElementById('yyyymmdd-output');
     const combinedText = document.getElementById('combined-text');
-    
+
     displayOutput.innerHTML = '';
     yyyymmddOutput.innerHTML = '';
-    
+
     if (results.length === 0) {
         combinedText.value = '';
         return;
@@ -131,11 +131,11 @@ function displayResults(results) {
         const p1 = document.createElement('p');
         p1.textContent = result.display;
         displayOutput.appendChild(p1);
-        
+
         const p2 = document.createElement('p');
         p2.textContent = result.yyyymmdd;
         yyyymmddOutput.appendChild(p2);
-        
+
         yyyymmddList.push(result.yyyymmdd);
     });
     combinedText.value = yyyymmddList.join(',');
@@ -166,8 +166,6 @@ function copyToClipboard() {
         });
 }
 
-// --- 追記 ---
-
 /**
  * すべての入力と出力をクリアする関数
  */
@@ -177,8 +175,36 @@ function clearAll() {
     document.getElementById('end-date').value = '';
     document.getElementById('weekly-start-date').value = '';
     document.getElementById('weekly-end-date').value = '';
-    
+
     // 結果表示エリアをクリア
     const emptyResults = [];
     displayResults(emptyResults);
 }
+
+// --- 追記: カレンダー機能の有効化 ---
+
+/**
+ * ページの読み込みが完了したあとに実行される処理
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // 各入力欄に個別にflatpickrを適用します
+    flatpickr("#start-date", {
+        "locale": "ja", // 表示を日本語に
+        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
+    });
+
+    flatpickr("#end-date", {
+        "locale": "ja", // 表示を日本語に
+        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
+    });
+
+    flatpickr("#weekly-start-date", {
+        "locale": "ja", // 表示を日本語に
+        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
+    });
+
+    flatpickr("#weekly-end-date", {
+        "locale": "ja", // 表示を日本語に
+        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
+    });
+});
