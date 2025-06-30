@@ -4,7 +4,6 @@
     --primary-hover-color: #6f72d3;
     --calendar-selection-color: #F79489; 
     --calendar-selection-hover-color: #f58379;
-    
     --background-color: #f8f9fa;
     --container-background: #ffffff;
     --text-color: #212529;
@@ -148,17 +147,18 @@ textarea {
 }
 
 /* --- flatpickrのカスタマイズ --- */
-#calendar-container { display: flex; justify-content: center; margin-top: 1em; }
-
+#calendar-container {
+    display: flex;
+    justify-content: center;
+}
 .flatpickr-calendar {
     border-radius: 0;
     border: 1px solid var(--border-color);
     box-shadow: 0 8px 30px var(--shadow-color);
     background: var(--container-background);
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
 }
-/* ヘッダーは青紫色に */
 .flatpickr-months {
     position: relative;
     display: flex;
@@ -167,50 +167,68 @@ textarea {
     background: var(--primary-color);
     border-radius: 0;
     height: 64px;
-    color: white;
 }
-.flatpickr-month { text-align: center; }
-.flatpickr-current-month {
+.flatpickr-months .flatpickr-month {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.flatpickr-months .flatpickr-current-month {
+    color: white;
     font-weight: 500;
     font-size: 1.2em;
-    color: white;
 }
-.flatpickr-current-month .flatpickr-monthDropdown-months,
-.flatpickr-current-month input.cur-year {
+.flatpickr-months .flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-months .flatpickr-current-month input.cur-year {
     font: inherit;
-    color: inherit;
+    color: white !important;
     background: transparent;
     padding: 0;
     margin: 0;
     border: none;
     display: inline;
 }
-.flatpickr-current-month input.cur-year:hover { background: rgba(255, 255, 255, 0.1); }
-
-.flatpickr-prev-month, .flatpickr-next-month {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    padding: 10px;
+.flatpickr-months .flatpickr-current-month input.cur-year:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
-.flatpickr-prev-month { left: 5px; }
-.flatpickr-next-month { right: 5px; }
-.flatpickr-prev-month svg, .flatpickr-next-month svg {
+
+.flatpickr-months .flatpickr-prev-month, 
+.flatpickr-months .flatpickr-next-month {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    cursor: pointer;
+}
+.flatpickr-months .flatpickr-prev-month { left: 0; }
+.flatpickr-months .flatpickr-next-month { right: 0; }
+.flatpickr-months .flatpickr-prev-month svg, 
+.flatpickr-months .flatpickr-next-month svg {
     width: 16px;
     height: 16px;
-    fill: white;
-    opacity: 0.9;
+    fill: white !important;
 }
-.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { opacity: 1; }
+.flatpickr-months .flatpickr-prev-month:hover, 
+.flatpickr-months .flatpickr-next-month:hover {
+    background: rgba(0,0,0,0.1);
+}
 
-/* 曜日は青紫色に */
-.flatpickr-weekdays { background: #f4f4fd; } /*曜日の背景を薄い青紫に*/
-span.flatpickr-weekday { color: var(--primary-color); font-weight: 500; }
-
-/* 日付の選択色は可愛いピンク系に */
+.flatpickr-weekdays {
+    background: #f4f4fd;
+}
+.flatpickr-weekdays span.flatpickr-weekday {
+    color: var(--primary-color);
+    font-weight: 500;
+}
 .flatpickr-day.selected,
 .flatpickr-day.startRange,
-.flatpickr-day.endRange {
+.flatpickr-day.endRange,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover {
     background: var(--calendar-selection-color);
     border-color: var(--calendar-selection-color);
 }
@@ -219,5 +237,11 @@ span.flatpickr-weekday { color: var(--primary-color); font-weight: 500; }
     border-color: transparent;
     box-shadow: -5px 0 0 rgba(247, 148, 137, 0.15), 5px 0 0 rgba(247, 148, 137, 0.15);
 }
-.flatpickr-day.today { border-color: var(--calendar-selection-hover-color); font-weight: bold; }
-.flatpickr-day.today:hover { background: var(--calendar-selection-hover-color); color: #fff; }
+.flatpickr-day.today {
+    border-color: var(--calendar-selection-hover-color);
+    font-weight: bold;
+}
+.flatpickr-day.today:hover {
+    background: var(--calendar-selection-hover-color);
+    color: #fff;
+}

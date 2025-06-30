@@ -28,7 +28,7 @@
         <div class="tabs">
             <button id="mode-range" class="tab-button active" onclick="changeMode('range')">単日・連続</button>
             <button id="mode-multiple" class="tab-button" onclick="changeMode('multiple')">複数選択</button>
-            </div>
+        </div>
 
         <h2>2. カレンダーから日付を選ぶ</h2>
         <div id="calendar-container"></div>
@@ -57,14 +57,15 @@
                     </div>
                     <div id="yyyymmdd-output" class="output-box"></div>
                 </div>
-                </div>
-            <h2>連結テキスト (カンマ区切り)</h2>
-            <div class="copy-area">
-                <textarea id="combined-text" readonly></textarea>
-                <button onclick="copyToClipboard('#combined-text')" class="icon-button" title="コピー">
-                    <i class="fa-solid fa-copy"></i>
-                </button>
             </div>
+
+            <div class="output-header-largetitle">
+                 <h2>連結テキスト (カンマ区切り)</h2>
+                 <button class="icon-button-small" onclick="copyToClipboard('#combined-text')" title="このテキストをコピー">
+                     <i class="fa-solid fa-copy"></i>
+                 </button>
+            </div>
+            <textarea id="combined-text" readonly></textarea>
         </div>
     </div>
 
