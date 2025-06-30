@@ -25,48 +25,30 @@
             </button>
         </div>
 
+        <h2>1. 日付の選択方法を選ぶ</h2>
         <div class="tabs">
-            <button class="tab-button active" onclick="showTab('single')">単日・連続</button>
-            <button class="tab-button" onclick="showTab('weekly')">曜日指定</button>
-            <button class="tab-button" onclick="showTab('multiple')">複数選択</button>
-            </div>
-
-        <div id="single" class="tab-content active">
-            <div class="input-group">
-                <label for="start-date">開始日:</label>
-                <input type="text" id="start-date" placeholder="例: 2025/12/1">
-                <label for="end-date">終了日(任意):</label>
-                <input type="text" id="end-date" placeholder="例: 2026/1/31">
-                <button onclick="generateDates()" class="generate-button">生成</button>
-            </div>
+            <button id="mode-range" class="tab-button active" onclick="changeMode('range')">単日・連続</button>
+            <button id="mode-weekly" class="tab-button" onclick="changeMode('weekly')">曜日指定</button>
+            <button id="mode-multiple" class="tab-button" onclick="changeMode('multiple')">複数選択</button>
         </div>
 
-        <div id="weekly" class="tab-content">
-            <div class="input-group">
-                <label for="weekly-weekday">曜日を選択:</label>
-                <select id="weekly-weekday">
-                    <option value="0">日曜日</option>
-                    <option value="1">月曜日</option>
-                    <option value="2">火曜日</option>
-                    <option value="3">水曜日</option>
-                    <option value="4">木曜日</option>
-                    <option value="5">金曜日</option>
-                    <option value="6">土曜日</option>
-                </select>
-                <label for="weekly-start-date">開始日:</label>
-                <input type="text" id="weekly-start-date" placeholder="例: 2025/4/1">
-                <label for="weekly-end-date">終了日:</label>
-                <input type="text" id="weekly-end-date" placeholder="例: 2025/6/30">
-                <button onclick="generateWeeklyDates()" class="generate-button">生成</button>
-            </div>
+        <div id="weekly-options" class="input-group" style="display: none;">
+             <label for="weekly-weekday">曜日を選択:</label>
+             <select id="weekly-weekday">
+                 <option value="0">日曜日</option>
+                 <option value="1">月曜日</option>
+                 <option value="2">火曜日</option>
+                 <option value="3">水曜日</option>
+                 <option value="4">木曜日</option>
+                 <option value="5">金曜日</option>
+                 <option value="6">土曜日</option>
+             </select>
         </div>
 
-        <div id="multiple" class="tab-content">
-            <div class="input-group">
-                <label for="multiple-dates">日付を選択:</label>
-                <input type="text" id="multiple-dates" placeholder="カレンダーから日付を複数選択" style="flex: 1;">
-                <button onclick="generateMultipleDates()" class="generate-button">生成</button>
-            </div>
+        <h2>2. カレンダーから日付を選ぶ</h2>
+        <div id="calendar-container"></div>
+        <div class="input-group" style="margin-top: 1.5em; justify-content: flex-end;">
+            <button onclick="generateDates()" class="generate-button">生成</button>
         </div>
         <div class="results">
             <h2>生成結果</h2>
@@ -93,5 +75,5 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ja.js"></script>
     <script src="script.js"></script>
-    </body>
+</body>
 </html>

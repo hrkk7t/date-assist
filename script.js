@@ -1,132 +1,123 @@
-// --- 定数 ---
+// --- グローバル変数 (状態管理) ---
+let fpInstance = null; // flatpickrのインスタンスを保持
+let currentMode = 'range'; // 現在の選択モード ('range', 'weekly', 'multiple')
 const WEEKDAY_JP = ['日', '月', '火', '水', '木', '金', '土'];
 
-// --- メインとなる関数 ---
 
 /**
- * 「単日・連続」タブの生成ボタンが押されたときに実行される関数
+ * ページの読み込み完了後に実行
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // 初期モードでカレンダーを初期化
+    initCalendar(currentMode);
+});
+
+/**
+ * カレンダーを初期化・再生成する関数
+ * @param {string} mode - 'range', 'weekly', 'multiple'
+ */
+function initCalendar(mode) {
+    // 既存のインスタンスがあれば破棄する
+    if (fpInstance) {
+        fpInstance.destroy();
+    }
+
+    const config = {
+        locale: "ja",
+        inline: true, // カレンダーを常に表示する
+        dateFormat: "Y/m/d",
+    };
+
+    // モードに応じて設定を上書き
+    if (mode === 'range' || mode === 'weekly') {
+        config.mode = 'range';
+    } else if (mode === 'multiple') {
+        config.mode = 'multiple';
+    }
+
+    // カレンダーをコンテナに生成
+    fpInstance = flatpickr("#calendar-container", config);
+}
+
+/**
+ * モード切替ボタンが押されたときに実行
+ * @param {string} newMode 
+ */
+function changeMode(newMode) {
+    if (currentMode === newMode) return; // 同じモードなら何もしない
+    currentMode = newMode;
+
+    // ボタンのアクティブ状態を切り替え
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`mode-${newMode}`).classList.add('active');
+
+    // 曜日指定オプションの表示/非表示
+    const weeklyOptions = document.getElementById('weekly-options');
+    weeklyOptions.style.display = newMode === 'weekly' ? 'flex' : 'none';
+    
+    // カレンダーを新しいモードで再生成
+    initCalendar(newMode);
+
+    // モードを切り替えたら結果をクリア
+    clearResults();
+}
+
+/**
+ * 「生成」ボタンが押されたときに実行
  */
 function generateDates() {
-    const startDateInput = document.getElementById('start-date');
-    const endDateInput = document.getElementById('end-date');
+    const selectedDates = fpInstance.selectedDates; // 選択された日付の配列を取得
 
-    const startDate = parseFullDate(startDateInput.value);
-    if (!startDate) {
-        alert('開始日を「YYYY/MM/DD」の形式で正しく入力してください。');
-        return;
-    }
-
-    if (endDateInput.value === '') {
-        const result = formatAll(startDate);
-        displayResults([result]);
-    } else {
-        const endDate = parseFullDate(endDateInput.value);
-        if (!endDate) {
-            alert('終了日を「YYYY/MM/DD」の形式で正しく入力してください。');
-            return;
-        }
-        if (startDate > endDate) {
-            alert('終了日は開始日以降の日付にしてください。');
-            return;
-        }
-
-        const results = [];
-        let currentDate = new Date(startDate);
-        while (currentDate <= endDate) {
-            results.push(formatAll(currentDate));
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-        displayResults(results);
-    }
-}
-
-/**
- * 「曜日指定」タブの生成ボタンが押されたときに実行される関数
- */
-function generateWeeklyDates() {
-    const weekdaySelect = document.getElementById('weekly-weekday');
-    const startDateInput = document.getElementById('weekly-start-date');
-    const endDateInput = document.getElementById('weekly-end-date');
-    const selectedWeekday = parseInt(weekdaySelect.value, 10);
-
-    const startDate = parseFullDate(startDateInput.value);
-    if (!startDate) {
-        alert('開始日を「YYYY/MM/DD」の形式で正しく入力してください。');
-        return;
-    }
-    const endDate = parseFullDate(endDateInput.value);
-    if (!endDate) {
-        alert('終了日を「YYYY/MM/DD」の形式で正しく入力してください。');
-        return;
-    }
-    if (startDate > endDate) {
-        alert('終了日は開始日以降の日付にしてください。');
-        return;
-    }
-
-    const results = [];
-    let currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-        if (currentDate.getDay() === selectedWeekday) {
-            results.push(formatAll(currentDate));
-        }
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
-    displayResults(results);
-}
-
-
-// ▼▼▼ 変更点(1/3): 「複数選択」タブ用の生成関数を新規作成 ▼▼▼
-/**
- * 「複数選択」タブの生成ボタンが押されたときに実行される関数
- */
-function generateMultipleDates() {
-    const datesInput = document.getElementById('multiple-dates');
-    const selectedDatesStr = datesInput.value;
-
-    if (!selectedDatesStr) {
+    if (selectedDates.length === 0) {
         alert('カレンダーから日付を選択してください。');
         return;
     }
+    
+    let results = [];
+    
+    // 現在のモードに応じて処理を分岐
+    switch (currentMode) {
+        case 'range':
+            if (selectedDates.length === 1) { // 日付が1つだけ選択されている場合
+                results.push(formatAll(selectedDates[0]));
+            } else { // 範囲選択されている場合
+                let [start, end] = selectedDates.sort((a,b) => a - b);
+                let currentDate = new Date(start);
+                while (currentDate <= end) {
+                    results.push(formatAll(currentDate));
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            }
+            break;
+        
+        case 'weekly':
+            if (selectedDates.length < 2) {
+                alert('期間の開始日と終了日を選択してください。');
+                return;
+            }
+            const selectedWeekday = parseInt(document.getElementById('weekly-weekday').value, 10);
+            let [start, end] = selectedDates.sort((a,b) => a - b);
+            let currentDate = new Date(start);
+            while (currentDate <= end) {
+                if (currentDate.getDay() === selectedWeekday) {
+                    results.push(formatAll(currentDate));
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            break;
 
-    // flatpickrが返す日付文字列は "YYYY/MM/DD, YYYY/MM/DD, ..." の形式
-    const dateStrings = selectedDatesStr.split(', ');
-    const results = [];
-
-    for (const dateStr of dateStrings) {
-        const date = parseFullDate(dateStr.trim());
-        if (date) {
-            // formatAll関数で整形して結果配列に追加
-            results.push(formatAll(date));
-        }
+        case 'multiple':
+            results = selectedDates
+                .sort((a,b) => a - b) // 日付順にソート
+                .map(date => formatAll(date)); // 各日付をフォーマット
+            break;
     }
-
-    // 結果を日付順にソートする（ユーザーが順不同で選択した場合のため）
-    results.sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
-
-    // 整形した結果を表示
+    
     displayResults(results);
 }
-// ▲▲▲ 変更点(1/3) ▲▲▲
 
 
-// --- 日付処理の補助をする関数 ---
-
-function parseFullDate(dateString) {
-    if (!dateString) return null;
-    const parts = dateString.split('/');
-    if (parts.length !== 3) return null;
-    const year = parseInt(parts[0], 10);
-    const month = parseInt(parts[1], 10);
-    const day = parseInt(parts[2], 10);
-    if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-    const date = new Date(year, month - 1, day);
-    if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) {
-        return date;
-    }
-    return null;
-}
+// --- 補助関数 ---
 
 function formatAll(date) {
     const displayFormat = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日(${WEEKDAY_JP[date.getDay()]})`;
@@ -137,20 +128,15 @@ function formatAll(date) {
     return { display: displayFormat, yyyymmdd: yyyymmddFormat };
 }
 
-
-// --- 画面表示を更新する関数 ---
 function displayResults(results) {
     const displayOutput = document.getElementById('display-output');
     const yyyymmddOutput = document.getElementById('yyyymmdd-output');
     const combinedText = document.getElementById('combined-text');
 
-    displayOutput.innerHTML = '';
-    yyyymmddOutput.innerHTML = '';
+    clearResults(); // 表示前に一旦クリア
 
     if (results.length === 0) {
-        // 結果が空の場合はテキストエリアも空にする
         displayOutput.innerHTML = '<p style="color: #6c757d;">条件に合う日付がありませんでした。</p>';
-        combinedText.value = '';
         return;
     }
 
@@ -169,20 +155,6 @@ function displayResults(results) {
     combinedText.value = yyyymmddList.join(',');
 }
 
-
-// --- UI操作のための関数 ---
-function showTab(tabName) {
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabContents.forEach(content => content.classList.remove('active'));
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(button => button.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-    document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
-    
-    // タブを切り替えたら結果もクリアする
-    clearAll();
-}
-
 function copyToClipboard() {
     const combinedText = document.getElementById('combined-text');
     if (combinedText.value === '') {
@@ -197,49 +169,13 @@ function copyToClipboard() {
         });
 }
 
-/**
- * すべての入力と出力をクリアする関数
- */
-function clearAll() {
-    // 入力欄をクリア
-    document.getElementById('start-date').value = '';
-    document.getElementById('end-date').value = '';
-    document.getElementById('weekly-start-date').value = '';
-    document.getElementById('weekly-end-date').value = '';
-    // ▼▼▼ 変更点(2/3): 新しい入力欄のクリア処理を追加 ▼▼▼
-    document.getElementById('multiple-dates').value = '';
-    // ▲▲▲ 変更点(2/3) ▲▲▲
-
-    // 結果表示エリアをクリア
-    const emptyResults = [];
-    displayResults(emptyResults);
-    // 初期状態に戻すためにメッセージもクリア
+function clearResults() {
     document.getElementById('display-output').innerHTML = '';
+    document.getElementById('yyyymmdd-output').innerHTML = '';
+    document.getElementById('combined-text').value = '';
 }
 
-
-// --- カレンダー機能の有効化 ---
-
-/**
- * ページの読み込みが完了したあとに実行される処理
- */
-document.addEventListener('DOMContentLoaded', () => {
-    const flatpickrConfig = {
-        "locale": "ja",
-        dateFormat: "Y/m/d",
-    };
-
-    flatpickr("#start-date", flatpickrConfig);
-    flatpickr("#end-date", flatpickrConfig);
-    flatpickr("#weekly-start-date", flatpickrConfig);
-    flatpickr("#weekly-end-date", flatpickrConfig);
-
-    // ▼▼▼ 変更点(3/3): 複数選択用のカレンダーを初期化 ▼▼▼
-    flatpickr("#multiple-dates", {
-        "locale": "ja",
-        dateFormat: "Y/m/d",
-        mode: "multiple", // 複数選択モードを有効に
-        conjunction: ", ", // 日付の区切り文字を設定
-    });
-    // ▲▲▲ 変更点(3/3) ▲▲▲
-});
+function clearAll() {
+    fpInstance.clear(); // カレンダーの選択をクリア
+    clearResults(); // 結果表示をクリア
+}
