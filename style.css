@@ -176,6 +176,19 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
 .flatpickr-months .flatpickr-prev-month svg, .flatpickr-months .flatpickr-next-month svg { width: 16px; height: 16px; fill: white !important; }
 .flatpickr-months .flatpickr-prev-month:hover, .flatpickr-months .flatpickr-next-month:hover { background: rgba(0,0,0,0.1); }
 
+.flatpickr-months .flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 2px 4px;
+    transition: background-color 0.2s;
+    box-shadow: none;
+}
+.flatpickr-months .flatpickr-current-month .flatpickr-monthDropdown-months:hover {
+    background: rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.1);
+}
+
 .flatpickr-innerContainer {
     padding: 1em;
     box-sizing: border-box;
