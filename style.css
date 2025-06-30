@@ -150,6 +150,7 @@ textarea {
 #calendar-container {
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 .flatpickr-calendar {
     border-radius: 0;
@@ -223,25 +224,26 @@ textarea {
     color: var(--primary-color);
     font-weight: 500;
 }
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange,
-.flatpickr-day.selected:hover,
-.flatpickr-day.startRange:hover,
-.flatpickr-day.endRange:hover {
-    background: var(--calendar-selection-color);
-    border-color: var(--calendar-selection-color);
+
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.startRange,
+.flatpickr-calendar .flatpickr-day.endRange,
+.flatpickr-calendar .flatpickr-day.selected:hover,
+.flatpickr-calendar .flatpickr-day.startRange:hover,
+.flatpickr-calendar .flatpickr-day.endRange:hover {
+    background: var(--calendar-selection-color) !important;
+    border-color: var(--calendar-selection-color) !important;
 }
-.flatpickr-day.inRange {
-    background: rgba(247, 148, 137, 0.15); 
-    border-color: transparent;
-    box-shadow: -5px 0 0 rgba(247, 148, 137, 0.15), 5px 0 0 rgba(247, 148, 137, 0.15);
+.flatpickr-calendar .flatpickr-day.inRange {
+    background: rgba(247, 148, 137, 0.15) !important; 
+    border-color: transparent !important;
+    box-shadow: -5px 0 0 rgba(247, 148, 137, 0.15), 5px 0 0 rgba(247, 148, 137, 0.15) !important;
 }
-.flatpickr-day.today {
+.flatpickr-calendar .flatpickr-day.today {
     border-color: var(--calendar-selection-hover-color);
     font-weight: bold;
 }
-.flatpickr-day.today:hover {
-    background: var(--calendar-selection-hover-color);
-    color: #fff;
+.flatpickr-calendar .flatpickr-day.today:hover {
+    background: var(--calendar-selection-hover-color) !important;
+    color: #fff !important;
 }
