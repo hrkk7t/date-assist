@@ -149,18 +149,17 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     width: 100%;
     max-width: 480px;
     background: var(--bg-color);
-    padding: 0.5em;
-    box-sizing: border-box;
+    padding: 0;
+    overflow: hidden;
 }
 .flatpickr-months {
     background: var(--primary-color);
-    border-radius: var(--border-radius-main);
+    border-radius: 0;
     height: 64px;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 0.5em;
 }
 .flatpickr-months .flatpickr-current-month { color: white; font-size: 1.2em; font-weight: 500; }
 .flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
@@ -176,17 +175,20 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
 .flatpickr-months .flatpickr-next-month { right: 0; }
 .flatpickr-months .flatpickr-prev-month svg, .flatpickr-months .flatpickr-next-month svg { width: 16px; height: 16px; fill: white !important; }
 .flatpickr-months .flatpickr-prev-month:hover, .flatpickr-months .flatpickr-next-month:hover { background: rgba(0,0,0,0.1); }
-.flatpickr-weekdays { padding: 8px 0; display: flex; }
+
+.flatpickr-innerContainer {
+    padding: 1em;
+    box-sizing: border-box;
+}
+.flatpickr-weekdays {
+    display: flex;
+    padding: 0 0 8px 0;
+}
 .flatpickr-weekdays span.flatpickr-weekday {
     color: var(--primary-color);
     font-weight: 700;
     flex: 1;
     text-align: center;
-}
-
-.flatpickr-innerContainer {
-    padding: 0;
-    box-sizing: border-box;
 }
 .dayContainer {
     padding: 0;
@@ -218,4 +220,27 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
 .flatpickr-day.today {
     font-weight: bold;
     box-shadow: inset 1px 1px 2px var(--shadow-dark), inset -1px -1px 2px var(--shadow-light);
+}
+
+.flatpickr-monthDropdown-months {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-main);
+    box-shadow: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+    padding: 0.5em 0;
+    margin-top: 5px;
+}
+.flatpickr-monthDropdown-month {
+    color: var(--text-color) !important;
+    padding: 0.5em 1.5em;
+    transition: all 0.2s;
+}
+.flatpickr-monthDropdown-month:hover {
+    background: var(--primary-color);
+    color: white !important;
+}
+.flatpickr-monthDropdown-month.selected {
+    background: var(--calendar-selection-color) !important;
+    color: white !important;
+    font-weight: bold;
 }
