@@ -2,6 +2,9 @@
 :root {
     --primary-color: #888BF4;
     --primary-hover-color: #6f72d3;
+    --calendar-selection-color: #F79489; 
+    --calendar-selection-hover-color: #f58379;
+    
     --background-color: #f8f9fa;
     --container-background: #ffffff;
     --text-color: #212529;
@@ -38,24 +41,11 @@ body {
     padding-bottom: 0.5em;
     margin-bottom: 1.5em;
 }
-h1 {
-    font-size: 1.8em;
-    color: var(--text-color);
-    margin: 0;
-}
-h2 {
-    font-size: 1.2em;
-    margin-top: 2em;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5em;
-}
+h1 { font-size: 1.8em; color: var(--text-color); margin: 0; }
+h2 { font-size: 1.2em; margin-top: 2em; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5em; }
 
 /* --- タブ --- */
-.tabs {
-    margin-bottom: 1.5em;
-    display: flex;
-    gap: 5px;
-}
+.tabs { margin-bottom: 1.5em; display: flex; gap: 5px; }
 .tab-button {
     flex: 1;
     padding: 0.8em 1em;
@@ -68,20 +58,10 @@ h2 {
     transition: all 0.2s ease;
     border-radius: 0;
 }
-.tab-button.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
+.tab-button.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
 
 /* --- 入力フォームとボタン --- */
-.input-group {
-    margin-bottom: 1.5em;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px 15px;
-}
+.input-group { margin-bottom: 1.5em; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 15px; }
 .generate-button {
     padding: 0.8em 1.5em;
     border: none;
@@ -93,9 +73,7 @@ h2 {
     transition: background-color 0.2s;
     border-radius: 0;
 }
-.generate-button:hover {
-    background-color: var(--primary-hover-color);
-}
+.generate-button:hover { background-color: var(--primary-hover-color); }
 .icon-button {
     background: none;
     border: 1px solid var(--border-color);
@@ -110,32 +88,21 @@ h2 {
     transition: all 0.2s;
     border-radius: 0;
 }
-.icon-button:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
-}
-
-/* ▼▼▼ 変更点: 小さいコピーボタンのスタイル ▼▼▼ */
+.icon-button:hover { background-color: #e9ecef; border-color: #adb5bd; }
 .icon-button-small {
     background: none;
     border: none;
     color: #adb5bd;
     cursor: pointer;
     padding: 5px;
-    font-size: 1em;
+    font-size: 1.2em;
+    line-height: 1;
     transition: color 0.2s ease;
 }
-.icon-button-small:hover {
-    color: var(--primary-color);
-}
-/* ▲▲▲ 変更ここまで ▲▲▲ */
-
+.icon-button-small:hover { color: var(--primary-color); }
 
 /* --- 結果表示 --- */
-.results {
-    margin-top: 2em;
-}
-/* ▼▼▼ 変更点: 結果表示欄のヘッダースタイル ▼▼▼ */
+.results { margin-top: 2em; }
 .output-header {
     display: flex;
     justify-content: space-between;
@@ -143,21 +110,10 @@ h2 {
     margin-bottom: 0.5em;
     padding-right: 5px;
 }
-.output-header h3 {
-    margin: 0;
-    font-size: 1em;
-    color: #6c757d;
-    font-weight: 400;
-}
-/* ▲▲▲ 変更ここまで ▲▲▲ */
+.output-header h3 { margin: 0; font-size: 1em; color: #6c757d; font-weight: 400; }
 
-.output-container {
-    display: flex;
-    gap: 20px;
-}
-.output-column {
-    flex: 1;
-}
+.output-container { display: flex; gap: 20px; }
+.output-column { flex: 1; }
 .output-box {
     background-color: #f8f9fa;
     border: 1px solid var(--border-color);
@@ -167,18 +123,22 @@ h2 {
     font-size: 0.95em;
     border-radius: 0;
 }
-.output-box p {
-    margin: 0 0 0.5em 0;
-}
+.output-box p { margin: 0 0 0.5em 0; }
 
-/* --- コピーエリア --- */
-.copy-area {
+.output-header-largetitle {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    margin-top: 2em;
 }
+.output-header-largetitle h2 { border-bottom: none; margin: 0; padding: 0; }
+
 textarea {
-    flex-grow: 1;
+    width: 100%;
+    box-sizing: border-box;
     height: 80px;
     padding: 0.8em;
     border: 1px solid var(--border-color);
@@ -188,76 +148,76 @@ textarea {
 }
 
 /* --- flatpickrのカスタマイズ --- */
-#calendar-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 1em;
-}
+#calendar-container { display: flex; justify-content: center; margin-top: 1em; }
+
 .flatpickr-calendar {
     border-radius: 0;
     border: 1px solid var(--border-color);
     box-shadow: 0 8px 30px var(--shadow-color);
     background: var(--container-background);
-    width: 100%; /* 中央配置のために幅を100%に */
+    width: 100%;
+    max-width: 400px;
 }
-
-/* ▼▼▼ 変更点: カレンダーのテーマカラー適用 ▼▼▼ */
+/* ヘッダーは青紫色に */
 .flatpickr-months {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: var(--primary-color);
     border-radius: 0;
-    padding: 8px 12px 4px 12px;
-}
-.flatpickr-months .flatpickr-month,
-.flatpickr-current-month .flatpickr-monthDropdown-months {
+    height: 64px;
     color: white;
-    font-weight: 500;
-    font-size: 1.1em;
 }
+.flatpickr-month { text-align: center; }
+.flatpickr-current-month {
+    font-weight: 500;
+    font-size: 1.2em;
+    color: white;
+}
+.flatpickr-current-month .flatpickr-monthDropdown-months,
 .flatpickr-current-month input.cur-year {
-    color: white;
+    font: inherit;
+    color: inherit;
     background: transparent;
-    font-weight: 500;
-    font-size: 1.1em;
+    padding: 0;
+    margin: 0;
+    border: none;
+    display: inline;
 }
-.flatpickr-current-month input.cur-year:hover {
-    background: rgba(255, 255, 255, 0.1);
+.flatpickr-current-month input.cur-year:hover { background: rgba(255, 255, 255, 0.1); }
+
+.flatpickr-prev-month, .flatpickr-next-month {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px;
 }
-.flatpickr-months .flatpickr-prev-month svg,
-.flatpickr-months .flatpickr-next-month svg {
-    fill: white;
-    opacity: 0.9;
+.flatpickr-prev-month { left: 5px; }
+.flatpickr-next-month { right: 5px; }
+.flatpickr-prev-month svg, .flatpickr-next-month svg {
     width: 16px;
     height: 16px;
-}
-.flatpickr-months .flatpickr-prev-month:hover svg,
-.flatpickr-months .flatpickr-next-month:hover svg {
     fill: white;
-    opacity: 1;
+    opacity: 0.9;
 }
-.flatpickr-weekdays {
-    background: #f1f3f5;
-}
-span.flatpickr-weekday {
-    color: #495057;
-    font-weight: 500;
-}
-/* ▲▲▲ 変更ここまで ▲▲▲ */
+.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { opacity: 1; }
 
+/* 曜日は青紫色に */
+.flatpickr-weekdays { background: #f4f4fd; } /*曜日の背景を薄い青紫に*/
+span.flatpickr-weekday { color: var(--primary-color); font-weight: 500; }
+
+/* 日付の選択色は可愛いピンク系に */
 .flatpickr-day.selected,
 .flatpickr-day.startRange,
 .flatpickr-day.endRange {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
+    background: var(--calendar-selection-color);
+    border-color: var(--calendar-selection-color);
 }
 .flatpickr-day.inRange {
-    background: rgba(136, 139, 244, 0.15);
+    background: rgba(247, 148, 137, 0.15); 
     border-color: transparent;
-    box-shadow: -5px 0 0 rgba(136, 139, 244, 0.15), 5px 0 0 rgba(136, 139, 244, 0.15);
+    box-shadow: -5px 0 0 rgba(247, 148, 137, 0.15), 5px 0 0 rgba(247, 148, 137, 0.15);
 }
-.flatpickr-day.today {
-    border-color: var(--primary-hover-color);
-}
-.flatpickr-day.today:hover {
-    background: var(--primary-hover-color);
-    color: #fff;
-}
+.flatpickr-day.today { border-color: var(--calendar-selection-hover-color); font-weight: bold; }
+.flatpickr-day.today:hover { background: var(--calendar-selection-hover-color); color: #fff; }
