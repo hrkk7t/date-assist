@@ -4,6 +4,7 @@
     --primary-hover-color: #6f72d3;
     --calendar-selection-color: #F79489; 
     --calendar-selection-hover-color: #f58379;
+    
     --bg-color: #eef0f4;
     --text-color: #555;
     --shadow-light: #ffffff;
@@ -146,7 +147,7 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     border-radius: var(--border-radius-main);
     box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
     width: 100%;
-    max-width: 520px;
+    max-width: 500px;
     background: var(--bg-color);
     padding: 0;
     overflow: hidden;
@@ -193,10 +194,6 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
 
 .flatpickr-innerContainer {
     padding: 1em;
-    box-sizing: border-box;
-}
-.flatpickr-rContainer {
-    width: 100%;
     box-sizing: border-box;
 }
 .flatpickr-weekdays {
