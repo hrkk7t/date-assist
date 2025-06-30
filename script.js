@@ -1,6 +1,6 @@
 // --- グローバル変数 (状態管理) ---
 let fpInstance = null; // flatpickrのインスタンスを保持
-let currentMode = 'range'; // 現在の選択モード ('range', 'weekly', 'multiple')
+let currentMode = 'range'; // 現在の選択モード ('range', 'multiple')
 const WEEKDAY_JP = ['日', '月', '火', '水', '木', '金', '土'];
 
 
@@ -8,34 +8,23 @@ const WEEKDAY_JP = ['日', '月', '火', '水', '木', '金', '土'];
  * ページの読み込み完了後に実行
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // 初期モードでカレンダーを初期化
-    initCalendar(currentMode);
+    initCalendar(currentMode); // 初期モードでカレンダーを初期化
 });
 
 /**
  * カレンダーを初期化・再生成する関数
- * @param {string} mode - 'range', 'weekly', 'multiple'
+ * @param {string} mode - 'range', 'multiple'
  */
 function initCalendar(mode) {
-    // 既存のインスタンスがあれば破棄する
-    if (fpInstance) {
-        fpInstance.destroy();
-    }
+    if (fpInstance) { fpInstance.destroy(); } // 既存のインスタンスがあれば破棄
 
     const config = {
         locale: "ja",
         inline: true, // カレンダーを常に表示する
         dateFormat: "Y/m/d",
+        mode: mode,   // モードを直接設定
     };
 
-    // モードに応じて設定を上書き
-    if (mode === 'range' || mode === 'weekly') {
-        config.mode = 'range';
-    } else if (mode === 'multiple') {
-        config.mode = 'multiple';
-    }
-
-    // カレンダーをコンテナに生成
     fpInstance = flatpickr("#calendar-container", config);
 }
 
@@ -44,30 +33,22 @@ function initCalendar(mode) {
  * @param {string} newMode 
  */
 function changeMode(newMode) {
-    if (currentMode === newMode) return; // 同じモードなら何もしない
+    if (currentMode === newMode) return;
     currentMode = newMode;
 
     // ボタンのアクティブ状態を切り替え
     document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
     document.getElementById(`mode-${newMode}`).classList.add('active');
-
-    // 曜日指定オプションの表示/非表示
-    const weeklyOptions = document.getElementById('weekly-options');
-    weeklyOptions.style.display = newMode === 'weekly' ? 'flex' : 'none';
     
-    // カレンダーを新しいモードで再生成
-    initCalendar(newMode);
-
-    // モードを切り替えたら結果をクリア
-    clearResults();
+    initCalendar(newMode); // カレンダーを新しいモードで再生成
+    clearResults(); // モードを切り替えたら結果をクリア
 }
 
 /**
  * 「生成」ボタンが押されたときに実行
  */
 function generateDates() {
-    const selectedDates = fpInstance.selectedDates; // 選択された日付の配列を取得
-
+    const selectedDates = fpInstance.selectedDates;
     if (selectedDates.length === 0) {
         alert('カレンダーから日付を選択してください。');
         return;
@@ -75,12 +56,11 @@ function generateDates() {
     
     let results = [];
     
-    // 現在のモードに応じて処理を分岐
     switch (currentMode) {
         case 'range':
-            if (selectedDates.length === 1) { // 日付が1つだけ選択されている場合
+            if (selectedDates.length === 1) { // 単日選択
                 results.push(formatAll(selectedDates[0]));
-            } else { // 範囲選択されている場合
+            } else { // 範囲選択
                 let [start, end] = selectedDates.sort((a,b) => a - b);
                 let currentDate = new Date(start);
                 while (currentDate <= end) {
@@ -89,33 +69,15 @@ function generateDates() {
                 }
             }
             break;
-        
-        case 'weekly':
-            if (selectedDates.length < 2) {
-                alert('期間の開始日と終了日を選択してください。');
-                return;
-            }
-            const selectedWeekday = parseInt(document.getElementById('weekly-weekday').value, 10);
-            let [start, end] = selectedDates.sort((a,b) => a - b);
-            let currentDate = new Date(start);
-            while (currentDate <= end) {
-                if (currentDate.getDay() === selectedWeekday) {
-                    results.push(formatAll(currentDate));
-                }
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            break;
 
         case 'multiple':
             results = selectedDates
-                .sort((a,b) => a - b) // 日付順にソート
-                .map(date => formatAll(date)); // 各日付をフォーマット
+                .sort((a,b) => a - b)
+                .map(date => formatAll(date));
             break;
     }
-    
     displayResults(results);
 }
-
 
 // --- 補助関数 ---
 
@@ -129,18 +91,17 @@ function formatAll(date) {
 }
 
 function displayResults(results) {
-    const displayOutput = document.getElementById('display-output');
-    const yyyymmddOutput = document.getElementById('yyyymmdd-output');
-    const combinedText = document.getElementById('combined-text');
-
     clearResults(); // 表示前に一旦クリア
 
     if (results.length === 0) {
-        displayOutput.innerHTML = '<p style="color: #6c757d;">条件に合う日付がありませんでした。</p>';
+        document.getElementById('display-output').innerHTML = '<p style="color: #6c757d;">条件に合う日付がありませんでした。</p>';
         return;
     }
 
+    const displayOutput = document.getElementById('display-output');
+    const yyyymmddOutput = document.getElementById('yyyymmdd-output');
     const yyyymmddList = [];
+
     results.forEach(result => {
         const p1 = document.createElement('p');
         p1.textContent = result.display;
@@ -152,22 +113,54 @@ function displayResults(results) {
 
         yyyymmddList.push(result.yyyymmdd);
     });
-    combinedText.value = yyyymmddList.join(',');
+    document.getElementById('combined-text').value = yyyymmddList.join(',');
 }
 
-function copyToClipboard() {
-    const combinedText = document.getElementById('combined-text');
-    if (combinedText.value === '') {
+// ▼▼▼ 変更点: コピー機能を汎用化 ▼▼▼
+function copyToClipboard(selector) {
+    const element = document.querySelector(selector);
+    if (!element || element.value === '') {
         alert('コピーするテキストがありません。');
         return;
     }
-    navigator.clipboard.writeText(combinedText.value)
+    navigator.clipboard.writeText(element.value)
         .then(() => alert('クリップボードにコピーしました！'))
         .catch(err => {
             console.error('コピーに失敗しました', err);
             alert('コピーに失敗しました。');
         });
 }
+
+/**
+ * 結果表示欄のテキストをコピーする関数
+ * @param {string} elementId 
+ */
+function copyOutput(elementId) {
+    const outputDiv = document.getElementById(elementId);
+    if (!outputDiv || outputDiv.children.length === 0) {
+        alert('コピーするテキストがありません。');
+        return;
+    }
+
+    // <p>タグの中身を抽出し、改行で連結
+    const textToCopy = Array.from(outputDiv.children)
+                            .map(p => p.textContent)
+                            .join('\n');
+    
+    if (textToCopy.trim() === '' || textToCopy.includes("条件に合う日付がありませんでした")) {
+         alert('コピーするテキストがありません。');
+         return;
+    }
+
+    navigator.clipboard.writeText(textToCopy)
+        .then(() => alert( (elementId === 'display-output' ? '日本語表記' : 'YYYYMMDD形式') + 'のリストをコピーしました！'))
+        .catch(err => {
+            console.error('コピーに失敗しました', err);
+            alert('コピーに失敗しました。');
+        });
+}
+// ▲▲▲ 変更ここまで ▲▲▲
+
 
 function clearResults() {
     document.getElementById('display-output').innerHTML = '';
@@ -176,6 +169,6 @@ function clearResults() {
 }
 
 function clearAll() {
-    fpInstance.clear(); // カレンダーの選択をクリア
-    clearResults(); // 結果表示をクリア
+    if (fpInstance) { fpInstance.clear(); }
+    clearResults();
 }

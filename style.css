@@ -1,6 +1,5 @@
 /* --- 基本設定とフォント --- */
 :root {
-    /* 色を「紫がかった薄い青」に変更 */
     --primary-color: #888BF4;
     --primary-hover-color: #6f72d3;
     --background-color: #f8f9fa;
@@ -9,7 +8,6 @@
     --border-color: #dee2e6;
     --shadow-color: rgba(0, 0, 0, 0.05);
 }
-
 body {
     font-family: 'Noto Sans JP', sans-serif;
     background-color: var(--background-color);
@@ -26,14 +24,12 @@ body {
 .container {
     background: var(--container-background);
     padding: 2em;
-    box-shadow: 0 8px
- 30px var(--shadow-color);
+    box-shadow: 0 8px 30px var(--shadow-color);
     width: 100%;
     max-width: 700px;
     border: 1px solid var(--border-color);
-    border-radius: 0; /* 角丸をなくす */
+    border-radius: 0;
 }
-
 .header {
     display: flex;
     justify-content: space-between;
@@ -42,13 +38,11 @@ body {
     padding-bottom: 0.5em;
     margin-bottom: 1.5em;
 }
-
 h1 {
     font-size: 1.8em;
     color: var(--text-color);
     margin: 0;
 }
-
 h2 {
     font-size: 1.2em;
     margin-top: 2em;
@@ -62,7 +56,6 @@ h2 {
     display: flex;
     gap: 5px;
 }
-
 .tab-button {
     flex: 1;
     padding: 0.8em 1em;
@@ -73,19 +66,15 @@ h2 {
     color: #495057;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 0; /* 角丸をなくす */
+    border-radius: 0;
 }
-
 .tab-button.active {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
 }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* --- 入力フォーム --- */
+/* --- 入力フォームとボタン --- */
 .input-group {
     margin-bottom: 1.5em;
     display: flex;
@@ -93,23 +82,6 @@ h2 {
     align-items: center;
     gap: 10px 15px;
 }
-
-input[type="text"], input[type="number"], select {
-    padding: 0.8em;
-    border: 1px solid var(--border-color);
-    font-size: 1em;
-    font-family: 'Noto Sans JP', sans-serif;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    border-radius: 0; /* 角丸をなくす */
-}
-input[type="text"]:focus, input[type="number"]:focus, select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    /* フォーカス時の色も新しいプライマリカラーに合わせる */
-    box-shadow: 0 0 0 3px rgba(136, 139, 244, 0.25);
-}
-
-/* --- ボタン --- */
 .generate-button {
     padding: 0.8em 1.5em;
     border: none;
@@ -119,12 +91,11 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     font-size: 1em;
     font-weight: 500;
     transition: background-color 0.2s;
-    border-radius: 0; /* 角丸をなくす */
+    border-radius: 0;
 }
 .generate-button:hover {
     background-color: var(--primary-hover-color);
 }
-
 .icon-button {
     background: none;
     border: 1px solid var(--border-color);
@@ -137,35 +108,55 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     justify-content: center;
     align-items: center;
     transition: all 0.2s;
-    border-radius: 0; /* 角丸をなくす */
+    border-radius: 0;
 }
 .icon-button:hover {
     background-color: #e9ecef;
-    color: var(--primary-hover-color);
     border-color: #adb5bd;
 }
-#clear-button {
-    background-color: #f1f3f5;
+
+/* ▼▼▼ 変更点: 小さいコピーボタンのスタイル ▼▼▼ */
+.icon-button-small {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 1em;
+    transition: color 0.2s ease;
 }
-#clear-button:hover {
-    background-color: #e9ecef;
-    color: #dc3545;
+.icon-button-small:hover {
+    color: var(--primary-color);
 }
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
 
 /* --- 結果表示 --- */
+.results {
+    margin-top: 2em;
+}
+/* ▼▼▼ 変更点: 結果表示欄のヘッダースタイル ▼▼▼ */
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5em;
+    padding-right: 5px;
+}
+.output-header h3 {
+    margin: 0;
+    font-size: 1em;
+    color: #6c757d;
+    font-weight: 400;
+}
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
 .output-container {
     display: flex;
     gap: 20px;
 }
 .output-column {
     flex: 1;
-}
-.output-column h3 {
-    margin-top: 0;
-    font-size: 1em;
-    color: #6c757d;
-    margin-bottom: 0.5em;
-    font-weight: 400;
 }
 .output-box {
     background-color: #f8f9fa;
@@ -174,7 +165,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     height: 220px;
     overflow-y: auto;
     font-size: 0.95em;
-    border-radius: 0; /* 角丸をなくす */
+    border-radius: 0;
 }
 .output-box p {
     margin: 0 0 0.5em 0;
@@ -193,5 +184,80 @@ textarea {
     border: 1px solid var(--border-color);
     resize: vertical;
     font-family: monospace;
-    border-radius: 0; /* 角丸をなくす */
+    border-radius: 0;
+}
+
+/* --- flatpickrのカスタマイズ --- */
+#calendar-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+.flatpickr-calendar {
+    border-radius: 0;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 30px var(--shadow-color);
+    background: var(--container-background);
+    width: 100%; /* 中央配置のために幅を100%に */
+}
+
+/* ▼▼▼ 変更点: カレンダーのテーマカラー適用 ▼▼▼ */
+.flatpickr-months {
+    background: var(--primary-color);
+    border-radius: 0;
+    padding: 8px 12px 4px 12px;
+}
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    color: white;
+    font-weight: 500;
+    font-size: 1.1em;
+}
+.flatpickr-current-month input.cur-year {
+    color: white;
+    background: transparent;
+    font-weight: 500;
+    font-size: 1.1em;
+}
+.flatpickr-current-month input.cur-year:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+    fill: white;
+    opacity: 0.9;
+    width: 16px;
+    height: 16px;
+}
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+    fill: white;
+    opacity: 1;
+}
+.flatpickr-weekdays {
+    background: #f1f3f5;
+}
+span.flatpickr-weekday {
+    color: #495057;
+    font-weight: 500;
+}
+/* ▲▲▲ 変更ここまで ▲▲▲ */
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.flatpickr-day.inRange {
+    background: rgba(136, 139, 244, 0.15);
+    border-color: transparent;
+    box-shadow: -5px 0 0 rgba(136, 139, 244, 0.15), 5px 0 0 rgba(136, 139, 244, 0.15);
+}
+.flatpickr-day.today {
+    border-color: var(--primary-hover-color);
+}
+.flatpickr-day.today:hover {
+    background: var(--primary-hover-color);
+    color: #fff;
 }

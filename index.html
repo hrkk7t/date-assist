@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="style.css">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css">
 </head>
 <body>
     <div class="container">
@@ -28,44 +27,41 @@
         <h2>1. 日付の選択方法を選ぶ</h2>
         <div class="tabs">
             <button id="mode-range" class="tab-button active" onclick="changeMode('range')">単日・連続</button>
-            <button id="mode-weekly" class="tab-button" onclick="changeMode('weekly')">曜日指定</button>
             <button id="mode-multiple" class="tab-button" onclick="changeMode('multiple')">複数選択</button>
-        </div>
-
-        <div id="weekly-options" class="input-group" style="display: none;">
-             <label for="weekly-weekday">曜日を選択:</label>
-             <select id="weekly-weekday">
-                 <option value="0">日曜日</option>
-                 <option value="1">月曜日</option>
-                 <option value="2">火曜日</option>
-                 <option value="3">水曜日</option>
-                 <option value="4">木曜日</option>
-                 <option value="5">金曜日</option>
-                 <option value="6">土曜日</option>
-             </select>
-        </div>
+            </div>
 
         <h2>2. カレンダーから日付を選ぶ</h2>
         <div id="calendar-container"></div>
         <div class="input-group" style="margin-top: 1.5em; justify-content: flex-end;">
             <button onclick="generateDates()" class="generate-button">生成</button>
         </div>
+
         <div class="results">
             <h2>生成結果</h2>
             <div class="output-container">
                 <div class="output-column">
-                    <h3>日本語表記</h3>
+                    <div class="output-header">
+                        <h3>日本語表記</h3>
+                        <button class="icon-button-small" onclick="copyOutput('display-output')" title="このリストをコピー">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
                     <div id="display-output" class="output-box"></div>
                 </div>
                 <div class="output-column">
-                    <h3>YYYYMMDD形式</h3>
+                    <div class="output-header">
+                        <h3>YYYYMMDD形式</h3>
+                        <button class="icon-button-small" onclick="copyOutput('yyyymmdd-output')" title="このリストをコピー">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
                     <div id="yyyymmdd-output" class="output-box"></div>
                 </div>
-            </div>
-            <h2>連結テキスト (コピー用)</h2>
+                </div>
+            <h2>連結テキスト (カンマ区切り)</h2>
             <div class="copy-area">
                 <textarea id="combined-text" readonly></textarea>
-                <button onclick="copyToClipboard()" class="icon-button" title="コピー">
+                <button onclick="copyToClipboard('#combined-text')" class="icon-button" title="コピー">
                     <i class="fa-solid fa-copy"></i>
                 </button>
             </div>
