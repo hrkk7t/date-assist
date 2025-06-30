@@ -152,6 +152,9 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     padding: 0;
     overflow: hidden;
 }
+.flatpickr-calendar * {
+    box-sizing: border-box;
+}
 .flatpickr-months {
     background: var(--primary-color);
     border-radius: 0;
@@ -192,9 +195,6 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
 .flatpickr-innerContainer {
     padding: 1em;
     box-sizing: border-box;
-}
-.flatpickr-rContainer {
-    width: 100%;
 }
 .flatpickr-weekdays {
     display: grid;
