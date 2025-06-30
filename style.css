@@ -193,6 +193,9 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     padding: 1em;
     box-sizing: border-box;
 }
+.flatpickr-rContainer {
+    width: 100%;
+}
 .flatpickr-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -219,6 +222,7 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     justify-content: center;
     align-items: center;
     line-height: 42px;
+    padding: 0;
 }
 .flatpickr-day:hover {
     background: var(--bg-color);
