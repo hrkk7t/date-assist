@@ -9,9 +9,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
- <link rel="icon" href="icon.png" type="image/png">   
-<link rel="manifest" href="manifest.json"> 
+    <link rel="icon" href="icon.png" type="image/png"> 
+    <link rel="manifest" href="manifest.json"> 
     <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/light.css">
 </head>
 <body>
     <div class="container">
@@ -25,7 +28,8 @@
         <div class="tabs">
             <button class="tab-button active" onclick="showTab('single')">単日・連続</button>
             <button class="tab-button" onclick="showTab('weekly')">曜日指定</button>
-        </div>
+            <button class="tab-button" onclick="showTab('multiple')">複数選択</button>
+            </div>
 
         <div id="single" class="tab-content active">
             <div class="input-group">
@@ -57,6 +61,13 @@
             </div>
         </div>
 
+        <div id="multiple" class="tab-content">
+            <div class="input-group">
+                <label for="multiple-dates">日付を選択:</label>
+                <input type="text" id="multiple-dates" placeholder="カレンダーから日付を複数選択" style="flex: 1;">
+                <button onclick="generateMultipleDates()" class="generate-button">生成</button>
+            </div>
+        </div>
         <div class="results">
             <h2>生成結果</h2>
             <div class="output-container">
@@ -78,6 +89,9 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ja.js"></script>
     <script src="script.js"></script>
-</body>
+    </body>
 </html>
