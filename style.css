@@ -147,19 +147,20 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     border-radius: var(--border-radius-main);
     box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
     width: 100%;
-    max-width: 480px;
+    max-width: 500px;
     background: var(--bg-color);
-    padding: 0;
-    overflow: hidden;
+    padding: 1em;
+    box-sizing: border-box;
 }
 .flatpickr-months {
     background: var(--primary-color);
-    border-radius: 0;
+    border-radius: var(--border-radius-main);
     height: 64px;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 1em;
 }
 .flatpickr-months .flatpickr-current-month { color: white; font-size: 1.2em; font-weight: 500; }
 .flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month {
@@ -170,6 +171,7 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     align-items: center;
     padding: 0 12px;
     cursor: pointer;
+    border-radius: var(--border-radius-main);
 }
 .flatpickr-months .flatpickr-prev-month { left: 0; }
 .flatpickr-months .flatpickr-next-month { right: 0; }
@@ -189,23 +191,21 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     border-color: rgba(0,0,0,0.1);
 }
 
-.flatpickr-innerContainer {
-    padding: 1em;
-    box-sizing: border-box;
-}
+.flatpickr-innerContainer { padding: 0; }
 .flatpickr-weekdays {
-    display: flex;
-    padding: 0 0 8px 0;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 4px;
 }
 .flatpickr-weekdays span.flatpickr-weekday {
     color: var(--primary-color);
     font-weight: 700;
-    flex: 1;
     text-align: center;
 }
 .dayContainer {
-    padding: 0;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
 }
 .flatpickr-day {
     color: var(--text-color);
@@ -213,6 +213,11 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     border-radius: 8px;
     transition: all 0.15s ease-in-out;
     max-width: none;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 42px;
 }
 .flatpickr-day:hover {
     background: var(--bg-color);
