@@ -119,12 +119,12 @@ function copyOutput(elementId) {
     }
 
     const textToCopy = Array.from(outputDiv.children)
-                            .map(p => p.textContent)
-                            .join('\n');
+                                .map(p => p.textContent)
+                                .join('\n');
     
     if (textToCopy.trim() === '' || textToCopy.includes("条件に合う日付がありませんでした")) {
-         alert('コピーするテキストがありません。');
-         return;
+        alert('コピーするテキストがありません。');
+        return;
     }
 
     navigator.clipboard.writeText(textToCopy)
