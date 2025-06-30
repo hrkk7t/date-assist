@@ -170,7 +170,11 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
 .flatpickr-months .flatpickr-prev-month:hover, .flatpickr-months .flatpickr-next-month:hover { background: rgba(0,0,0,0.1); }
 .flatpickr-weekdays { padding: 8px 0; }
 .flatpickr-weekdays span.flatpickr-weekday { color: var(--primary-color); font-weight: 700; }
-.flatpickr-innerContainer { padding: 0 10px 10px 10px; }
+
+.flatpickr-innerContainer {
+    /* ▼▼▼ この部分の左右の余白を広げました ▼▼▼ */
+    padding: 0 15px 10px 15px;
+}
 
 .flatpickr-day {
     color: var(--text-color);
