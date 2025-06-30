@@ -44,14 +44,11 @@ function generateDates() {
  * 「曜日指定」タブの生成ボタンが押されたときに実行される関数
  */
 function generateWeeklyDates() {
-    // 1. 各入力欄から値を取得する
     const weekdaySelect = document.getElementById('weekly-weekday');
     const startDateInput = document.getElementById('weekly-start-date');
     const endDateInput = document.getElementById('weekly-end-date');
-
     const selectedWeekday = parseInt(weekdaySelect.value, 10);
 
-    // 2. 開始日と終了日をパースし、エラーチェックを行う
     const startDate = parseFullDate(startDateInput.value);
     if (!startDate) {
         alert('開始日を「YYYY/MM/DD」の形式で正しく入力してください。');
@@ -67,23 +64,51 @@ function generateWeeklyDates() {
         return;
     }
 
-    // 3. ループで期間内の該当日付を検索
     const results = [];
     let currentDate = new Date(startDate);
 
     while (currentDate <= endDate) {
-        // 現在の日付の曜日が、選択された曜日と一致するかチェック
         if (currentDate.getDay() === selectedWeekday) {
-            // 一致したら結果の配列に追加
             results.push(formatAll(currentDate));
         }
-        // 日付を1日進める
         currentDate.setDate(currentDate.getDate() + 1);
     }
-
-    // 4. 結果を表示する
     displayResults(results);
 }
+
+
+// ▼▼▼ 変更点(1/3): 「複数選択」タブ用の生成関数を新規作成 ▼▼▼
+/**
+ * 「複数選択」タブの生成ボタンが押されたときに実行される関数
+ */
+function generateMultipleDates() {
+    const datesInput = document.getElementById('multiple-dates');
+    const selectedDatesStr = datesInput.value;
+
+    if (!selectedDatesStr) {
+        alert('カレンダーから日付を選択してください。');
+        return;
+    }
+
+    // flatpickrが返す日付文字列は "YYYY/MM/DD, YYYY/MM/DD, ..." の形式
+    const dateStrings = selectedDatesStr.split(', ');
+    const results = [];
+
+    for (const dateStr of dateStrings) {
+        const date = parseFullDate(dateStr.trim());
+        if (date) {
+            // formatAll関数で整形して結果配列に追加
+            results.push(formatAll(date));
+        }
+    }
+
+    // 結果を日付順にソートする（ユーザーが順不同で選択した場合のため）
+    results.sort((a, b) => a.yyyymmdd.localeCompare(b.yyyymmdd));
+
+    // 整形した結果を表示
+    displayResults(results);
+}
+// ▲▲▲ 変更点(1/3) ▲▲▲
 
 
 // --- 日付処理の補助をする関数 ---
@@ -123,9 +148,12 @@ function displayResults(results) {
     yyyymmddOutput.innerHTML = '';
 
     if (results.length === 0) {
+        // 結果が空の場合はテキストエリアも空にする
+        displayOutput.innerHTML = '<p style="color: #6c757d;">条件に合う日付がありませんでした。</p>';
         combinedText.value = '';
         return;
     }
+
     const yyyymmddList = [];
     results.forEach(result => {
         const p1 = document.createElement('p');
@@ -150,6 +178,9 @@ function showTab(tabName) {
     tabButtons.forEach(button => button.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
     document.querySelector(`.tab-button[onclick="showTab('${tabName}')"]`).classList.add('active');
+    
+    // タブを切り替えたら結果もクリアする
+    clearAll();
 }
 
 function copyToClipboard() {
@@ -175,36 +206,40 @@ function clearAll() {
     document.getElementById('end-date').value = '';
     document.getElementById('weekly-start-date').value = '';
     document.getElementById('weekly-end-date').value = '';
+    // ▼▼▼ 変更点(2/3): 新しい入力欄のクリア処理を追加 ▼▼▼
+    document.getElementById('multiple-dates').value = '';
+    // ▲▲▲ 変更点(2/3) ▲▲▲
 
     // 結果表示エリアをクリア
     const emptyResults = [];
     displayResults(emptyResults);
+    // 初期状態に戻すためにメッセージもクリア
+    document.getElementById('display-output').innerHTML = '';
 }
 
-// --- 追記: カレンダー機能の有効化 ---
+
+// --- カレンダー機能の有効化 ---
 
 /**
  * ページの読み込みが完了したあとに実行される処理
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // 各入力欄に個別にflatpickrを適用します
-    flatpickr("#start-date", {
-        "locale": "ja", // 表示を日本語に
-        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
-    });
+    const flatpickrConfig = {
+        "locale": "ja",
+        dateFormat: "Y/m/d",
+    };
 
-    flatpickr("#end-date", {
-        "locale": "ja", // 表示を日本語に
-        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
-    });
+    flatpickr("#start-date", flatpickrConfig);
+    flatpickr("#end-date", flatpickrConfig);
+    flatpickr("#weekly-start-date", flatpickrConfig);
+    flatpickr("#weekly-end-date", flatpickrConfig);
 
-    flatpickr("#weekly-start-date", {
-        "locale": "ja", // 表示を日本語に
-        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
+    // ▼▼▼ 変更点(3/3): 複数選択用のカレンダーを初期化 ▼▼▼
+    flatpickr("#multiple-dates", {
+        "locale": "ja",
+        dateFormat: "Y/m/d",
+        mode: "multiple", // 複数選択モードを有効に
+        conjunction: ", ", // 日付の区切り文字を設定
     });
-
-    flatpickr("#weekly-end-date", {
-        "locale": "ja", // 表示を日本語に
-        dateFormat: "Y/m/d", // 日付のフォーマットをYYYY/MM/DD 形式に
-    });
+    // ▲▲▲ 変更点(3/3) ▲▲▲
 });
