@@ -2,12 +2,16 @@ let fpInstance = null;
 let currentMode = 'range';
 const WEEKDAY_JP = ['日', '月', '火', '水', '木', '金', '土'];
 
+// --- 初期化 ---
 document.addEventListener('DOMContentLoaded', () => {
     initCalendar(currentMode);
 });
 
+// --- カレンダーの初期化・再描画 ---
 function initCalendar(mode) {
-    if (fpInstance) { fpInstance.destroy(); }
+    if (fpInstance) {
+        fpInstance.destroy();
+    }
 
     const config = {
         locale: "ja",
@@ -19,6 +23,7 @@ function initCalendar(mode) {
     fpInstance = flatpickr("#calendar-container", config);
 }
 
+// --- モード切替 ---
 function changeMode(newMode) {
     if (currentMode === newMode) return;
     currentMode = newMode;
@@ -30,6 +35,7 @@ function changeMode(newMode) {
     clearResults();
 }
 
+// --- 日付生成のメイン処理 ---
 function generateDates() {
     const selectedDates = fpInstance.selectedDates;
     if (selectedDates.length === 0) {
@@ -37,69 +43,100 @@ function generateDates() {
         return;
     }
     
+    // 選択された日付を昇順にソート
+    const sortedDates = selectedDates.sort((a, b) => a - b);
     let results = [];
     
-    switch (currentMode) {
-        case 'range':
-            if (selectedDates.length === 1) {
-                results.push(formatAll(selectedDates[0]));
-            } else {
-                let [start, end] = selectedDates.sort((a,b) => a - b);
-                let currentDate = new Date(start);
-                while (currentDate <= end) {
-                    results.push(formatAll(currentDate));
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-            }
-            break;
-
-        case 'multiple':
-            results = selectedDates
-                .sort((a,b) => a - b)
-                .map(date => formatAll(date));
-            break;
+    // 「単日・連続」モードの場合
+    if (currentMode === 'range' && sortedDates.length > 1) {
+        // 期間の開始日と終了日のみを処理対象とする
+        let [start, end] = [sortedDates[0], sortedDates[sortedDates.length - 1]];
+        let currentDate = new Date(start);
+        while (currentDate <= end) {
+            results.push(formatDate(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+    } else {
+        // 「複数選択」モード、または「単日・連続」で1日だけ選択した場合
+        results = sortedDates.map(date => formatDate(date));
     }
+    
     displayResults(results);
 }
 
-function formatAll(date) {
-    const displayFormat = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日(${WEEKDAY_JP[date.getDay()]})`;
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    const yyyymmddFormat = `${y}${m}${d}`;
-    return { display: displayFormat, yyyymmdd: yyyymmddFormat };
+// --- 日付を目的の形式に変換 ---
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const weekday = WEEKDAY_JP[date.getDay()];
+    
+    // ★変更点: 括弧を全角に変更
+    // 表示用フォーマット (例: 2024年7月1日（月）)
+    const display = `${year}年${month}月${day}日（${weekday}）`;
+    // 省略形フォーマット (例: 7月1日（月） や 1日（月）)
+    const displayShort = `${month}月${day}日（${weekday}）`;
+    const displayDayOnly = `${day}日（${weekday}）`;
+
+    // YYYYMMDD形式
+    const yyyymmdd = `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
+    
+    return { display, displayShort, displayDayOnly, yyyymmdd };
 }
 
+// --- 結果の表示 ---
 function displayResults(results) {
     clearResults();
+    const displayOutput = document.getElementById('display-output');
 
     if (results.length === 0) {
-        document.getElementById('display-output').innerHTML = '<p style="color: #6c757d;">条件に合う日付がありませんでした。</p>';
+        displayOutput.innerHTML = '<p style="color: #6c757d;">条件に合う日付がありませんでした。</p>';
         return;
     }
 
-    const displayOutput = document.getElementById('display-output');
-    const yyyymmddOutput = document.getElementById('yyyymmdd-output');
-    const yyyymmddList = [];
+    // 日本語表記の生成
+    if (currentMode === 'range' && results.length > 1) {
+        const start = results[0];
+        const end = results[results.length - 1];
+        const p = document.createElement('p');
+        // 月が同じかどうかで表示を切り替え
+        if (start.yyyymmdd.substring(0, 6) === end.yyyymmdd.substring(0, 6)) {
+            p.textContent = `${start.displayShort}～${end.displayDayOnly}`;
+        } else {
+            p.textContent = `${start.displayShort}～${end.displayShort}`;
+        }
+        displayOutput.appendChild(p);
+    } else {
+        results.forEach(result => {
+            const p = document.createElement('p');
+            p.textContent = result.display;
+            displayOutput.appendChild(p);
+        });
+    }
 
-    results.forEach(result => {
-        const p1 = document.createElement('p');
-        p1.textContent = result.display;
-        displayOutput.appendChild(p1);
-
-        const p2 = document.createElement('p');
-        p2.textContent = result.yyyymmdd;
-        yyyymmddOutput.appendChild(p2);
-
-        yyyymmddList.push(result.yyyymmdd);
-    });
+    // YYYYMMDDの連結テキストを生成
+    const yyyymmddList = results.map(r => r.yyyymmdd);
     document.getElementById('combined-text').value = yyyymmddList.join(',');
 }
 
+// --- 結果のクリア ---
+function clearResults() {
+    document.getElementById('display-output').innerHTML = '';
+    document.getElementById('combined-text').value = '';
+}
+
+// --- すべてクリア ---
+function clearAll() {
+    if (fpInstance) {
+        fpInstance.clear();
+    }
+    clearResults();
+}
+
+// --- コピー機能 ---
 function copyToClipboard(selector) {
     const element = document.querySelector(selector);
-    if (!element || element.value === '') {
+    if (!element || !element.value) {
         alert('コピーするテキストがありません。');
         return;
     }
@@ -111,37 +148,21 @@ function copyToClipboard(selector) {
         });
 }
 
-function copyOutput(elementId) {
-    const outputDiv = document.getElementById(elementId);
-    if (!outputDiv || outputDiv.children.length === 0) {
+function copyOutput() {
+    const outputDiv = document.getElementById('display-output');
+    if (!outputDiv || outputDiv.children.length === 0 || outputDiv.children[0].textContent.includes('条件に合う日付がありませんでした')) {
         alert('コピーするテキストがありません。');
         return;
     }
 
     const textToCopy = Array.from(outputDiv.children)
-                                .map(p => p.textContent)
-                                .join('\n');
+                             .map(p => p.textContent)
+                             .join('\n');
     
-    if (textToCopy.trim() === '' || textToCopy.includes("条件に合う日付がありませんでした")) {
-        alert('コピーするテキストがありません。');
-        return;
-    }
-
     navigator.clipboard.writeText(textToCopy)
-        .then(() => alert( (elementId === 'display-output' ? '日本語表記' : 'YYYYMMDD形式') + 'のリストをコピーしました！'))
+        .then(() => alert('日本語表記のリストをコピーしました！'))
         .catch(err => {
             console.error('コピーに失敗しました', err);
             alert('コピーに失敗しました。');
         });
-}
-
-function clearResults() {
-    document.getElementById('display-output').innerHTML = '';
-    document.getElementById('yyyymmdd-output').innerHTML = '';
-    document.getElementById('combined-text').value = '';
-}
-
-function clearAll() {
-    if (fpInstance) { fpInstance.clear(); }
-    clearResults();
 }

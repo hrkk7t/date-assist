@@ -30,7 +30,7 @@ body {
     border-radius: 0;
     box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
     width: 100%;
-    max-width: 700px;
+    max-width: 900px;
     border: 1px solid white;
 }
 .header {
@@ -43,6 +43,7 @@ body {
 }
 h1 { font-size: 1.8em; color: var(--primary-color); margin: 0; font-weight: 700; }
 h2 { font-size: 1.2em; margin-top: 2.5em; margin-bottom: 1em; color: #777; font-weight: 500; border: none; padding: 0; }
+h3 { margin: 0; font-size: 1em; color: #888; font-weight: 500; }
 
 /* --- タブ --- */
 .tabs { margin-bottom: 1.5em; display: flex; gap: 10px; }
@@ -64,6 +65,21 @@ h2 { font-size: 1.2em; margin-top: 2.5em; margin-bottom: 1em; color: #777; font-
     box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
 }
 
+/* --- 2カラムレイアウト --- */
+.main-content {
+    display: flex;
+    gap: 2em;
+    align-items: flex-start;
+}
+.left-column, .right-column {
+    flex: 1;
+    min-width: 0; /* flexアイテムの縮小時のオーバーフローを防ぐ */
+}
+.left-column h2, .right-column h2 {
+    margin-top: 0; /* カラム内のh2の上マージンをリセット */
+}
+
+
 /* --- ボタン --- */
 .input-group { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 15px; }
 .button-container {
@@ -81,6 +97,7 @@ h2 { font-size: 1.2em; margin-top: 2.5em; margin-bottom: 1em; color: #777; font-
     transition: all 0.2s ease-in-out;
     border-radius: var(--border-radius-main);
     box-shadow: 4px 4px 8px #6a6dc1, -4px -4px 8px #a6aeff;
+    width: 60%;
 }
 .generate-button:hover {
     background-color: var(--primary-hover-color);
@@ -120,13 +137,12 @@ h2 { font-size: 1.2em; margin-top: 2.5em; margin-bottom: 1em; color: #777; font-
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.8em;
 }
-.output-header h3 { margin: 0; font-size: 1em; color: #888; font-weight: 500; }
-.output-header-largetitle { margin-top: 2.5em; margin-bottom: 1em; }
-.output-header-largetitle h2 { margin: 0; padding: 0; }
+.output-header-largetitle {
+    margin-top: 1.5em;
+}
 
-.output-container { display: flex; gap: 20px; }
-.output-column { flex: 1; }
 .output-box, textarea {
     background: var(--bg-color);
     border: none;
@@ -135,7 +151,7 @@ h2 { font-size: 1.2em; margin-top: 2.5em; margin-bottom: 1em; color: #777; font-
     border-radius: var(--border-radius-main);
     box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
 }
-.output-box { height: 220px; overflow-y: auto; }
+.output-box { height: 80px; overflow-y: auto; }
 .output-box p { margin: 0 0 0.5em 0; }
 textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; font-family: monospace; }
 
@@ -147,7 +163,6 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     border-radius: var(--border-radius-main);
     box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
     width: 100%;
-    max-width: 500px;
     background: var(--bg-color);
     padding: 1em;
     box-sizing: border-box;
@@ -275,4 +290,15 @@ textarea { width: 100%; box-sizing: border-box; height: 80px; resize: vertical; 
     background: var(--calendar-selection-color) !important;
     color: white !important;
     font-weight: bold;
+}
+
+/* --- レスポンシブ対応 --- */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        gap: 1em;
+    }
+    .right-column h2 {
+        margin-top: 2.5em; /* スマホ表示の際に、結果の見出しの上に余白を入れる */
+    }
 }

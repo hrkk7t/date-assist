@@ -31,44 +31,35 @@
             <button id="mode-multiple" class="tab-button" onclick="changeMode('multiple')">複数選択</button>
         </div>
 
-        <h2>2. カレンダーから日付を選ぶ</h2>
-        <div id="calendar-container"></div>
-        <div class="input-group button-container">
-            <button onclick="generateDates()" class="generate-button">生成</button>
-        </div>
-
-        <div class="results">
-            <h2>生成結果</h2>
-            <div class="output-container">
-                <div class="output-column">
-                    <div class="output-header">
-                        <h3>日本語表記</h3>
-                        <button class="icon-button-small" onclick="copyOutput('display-output')" title="このリストをコピー">
-                            <i class="fa-solid fa-copy"></i>
-                        </button>
-                    </div>
-                    <div id="display-output" class="output-box"></div>
-                </div>
-                <div class="output-column">
-                    <div class="output-header">
-                        <h3>YYYYMMDD形式</h3>
-                        <button class="icon-button-small" onclick="copyOutput('yyyymmdd-output')" title="このリストをコピー">
-                            <i class="fa-solid fa-copy"></i>
-                        </button>
-                    </div>
-                    <div id="yyyymmdd-output" class="output-box"></div>
+        <div class="main-content">
+            <div class="left-column">
+                <h2>2. カレンダーから日付を選ぶ</h2>
+                <div id="calendar-container"></div>
+                <div class="input-group button-container">
+                    <button onclick="generateDates()" class="generate-button">生成</button>
                 </div>
             </div>
 
-            <div class="output-header-largetitle">
-                <h2>連結テキスト (カンマ区切り)</h2>
-                <button class="icon-button-small" onclick="copyToClipboard('#combined-text')" title="このテキストをコピー">
-                    <i class="fa-solid fa-copy"></i>
-                </button>
+            <div class="right-column">
+                <h2>3. 生成結果</h2>
+                <div class="output-header">
+                    <h3>日本語表記</h3>
+                    <button class="icon-button-small" onclick="copyOutput()" title="このリストをコピー">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+                <div id="display-output" class="output-box"></div>
+    
+                <div class="output-header-largetitle">
+                    <h3>連結テキスト (カンマ区切り)</h3>
+                    <button class="icon-button-small" onclick="copyToClipboard('#combined-text')" title="このテキストをコピー">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+                <textarea id="combined-text" readonly></textarea>
             </div>
-            <textarea id="combined-text" readonly></textarea>
         </div>
-    </div>
+         </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ja.js"></script>
