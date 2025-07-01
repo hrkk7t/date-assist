@@ -47,9 +47,9 @@ function generateDates() {
     const sortedDates = selectedDates.sort((a, b) => a - b);
     let results = [];
     
-    // 「単日・連続」モードの場合
+    // 「単日・連続」モードで期間が選択された場合
     if (currentMode === 'range' && sortedDates.length > 1) {
-        // 期間の開始日と終了日のみを処理対象とする
+        // 期間内のすべての日付を生成
         let [start, end] = [sortedDates[0], sortedDates[sortedDates.length - 1]];
         let currentDate = new Date(start);
         while (currentDate <= end) {
@@ -71,14 +71,10 @@ function formatDate(date) {
     const day = date.getDate();
     const weekday = WEEKDAY_JP[date.getDay()];
     
-    // ★変更点: 括弧を全角に変更
-    // 表示用フォーマット (例: 2024年7月1日（月）)
     const display = `${year}年${month}月${day}日（${weekday}）`;
-    // 省略形フォーマット (例: 7月1日（月） や 1日（月）)
     const displayShort = `${month}月${day}日（${weekday}）`;
     const displayDayOnly = `${day}日（${weekday}）`;
 
-    // YYYYMMDD形式
     const yyyymmdd = `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
     
     return { display, displayShort, displayDayOnly, yyyymmdd };
@@ -94,19 +90,33 @@ function displayResults(results) {
         return;
     }
 
-    // 日本語表記の生成
+    // ★★★ 年表示のロジックをここに実装 ★★★
     if (currentMode === 'range' && results.length > 1) {
         const start = results[0];
         const end = results[results.length - 1];
         const p = document.createElement('p');
-        // 月が同じかどうかで表示を切り替え
-        if (start.yyyymmdd.substring(0, 6) === end.yyyymmdd.substring(0, 6)) {
-            p.textContent = `${start.displayShort}～${end.displayDayOnly}`;
+
+        const startYear = start.yyyymmdd.substring(0, 4);
+        const endYear = end.yyyymmdd.substring(0, 4);
+
+        if (startYear === endYear) {
+            // 年が同じ場合
+            const startMonth = start.yyyymmdd.substring(4, 6);
+            const endMonth = end.yyyymmdd.substring(4, 6);
+            if (startMonth === endMonth) {
+                // 月も同じ場合 -> 2025年7月1日（火）～12日（土）
+                p.textContent = `${start.display}～${end.displayDayOnly}`;
+            } else {
+                // 月が違う場合 -> 2025年7月28日（月）～8月5日（火）
+                p.textContent = `${start.display}～${end.displayShort}`;
+            }
         } else {
-            p.textContent = `${start.displayShort}～${end.displayShort}`;
+            // 年が違う場合 -> 2025年12月28日（日）～2026年1月5日（月）
+            p.textContent = `${start.display}～${end.display}`;
         }
         displayOutput.appendChild(p);
     } else {
+        // 単日または複数選択の場合
         results.forEach(result => {
             const p = document.createElement('p');
             p.textContent = result.display;
